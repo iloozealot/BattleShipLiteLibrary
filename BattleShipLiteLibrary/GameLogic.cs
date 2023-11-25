@@ -12,15 +12,30 @@ namespace BattleShipLiteLibrary
     {
         public static void InitializeGrid(PlayerInfoModel model)
         {
-            List<string> letters = ["A", "B", "C", "D", "E"];
+            List<string> letters = new List<string>
+            {
+                "A",
+                "B",
+                "C",
+                "D",
+                "E"
+            };
 
-            List<int> numbers = [1, 2, 3, 4, 5];
+
+            List<int> numbers = new List<int>()
+            {
+                1,
+                2, 
+                3, 
+                4, 
+                5 
+            };
 
             foreach (string letter in letters)
             {
                 foreach (int number in numbers)
                 {
-
+                    AddGridSpot(model, letter, number);
                 }
             }
         }
@@ -40,7 +55,7 @@ namespace BattleShipLiteLibrary
         public static bool PlaceShip(PlayerInfoModel model, string location)
         {
             bool output = false;
-            (string row, int column) = SplitSHotIntoRowAndColumn(location);
+            (string row, int column) = SplitShotIntoRowAndColumn(location);
 
             bool isValidLocation = ValidateGridLocation(model, row, column);
             bool isSpotOpen = ValidateShipLocation(model, row, column);
@@ -48,7 +63,7 @@ namespace BattleShipLiteLibrary
             if (isValidLocation && isSpotOpen)
             {
 
-                model.ShipLocations.Add(new GridSpotModel()
+                model.ShipLocations.Add(new GridSpotModel
                 {
                     SpotLetter = row.ToUpper(),
                     SpotNumber = column,
@@ -123,7 +138,7 @@ namespace BattleShipLiteLibrary
             return shotCount;
         }
 
-        public static (string row, int column) SplitSHotIntoRowAndColumn(string shot)
+        public static (string row, int column) SplitShotIntoRowAndColumn(string shot)
         {
             string row = "";
             int column = 0;
@@ -169,7 +184,8 @@ namespace BattleShipLiteLibrary
             {
                 if (ship.SpotLetter == row.ToUpper() && ship.SpotNumber == column)
                 {
-                    isAHit = false;
+                    isAHit = true;
+                    ship.Status = GridSpotStatus.Sunk;
                 }
             }
 
