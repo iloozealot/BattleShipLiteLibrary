@@ -18,11 +18,11 @@ do
 
     if (doesGameContinue == true)
     {
-        PlayerInfoModel tempHolder = opponent;
-        opponent = activePlayer;
-        activePlayer = tempHolder;
+        //PlayerInfoModel tempHolder = opponent;
+        //opponent = activePlayer;
+        //activePlayer = tempHolder;
 
-
+        (activePlayer, opponent) = (opponent, activePlayer);
     }
     else
     {
@@ -31,9 +31,43 @@ do
     
 } while (winner == null);
 
+IdentifyWinner(winner);
+
+void IdentifyWinner(PlayerInfoModel winner)
+{
+    Console.WriteLine($"Congratulations to { winner.UsersName } for winning!");
+    Console.WriteLine($"{ winner.UsersName } took { GameLogic.GetShotCount(winner) } shots.");
+}
+
 void RecordPlayerShot(PlayerInfoModel activePlayer, PlayerInfoModel opponent)
 {
-    
+    bool isValidShot = false;
+    string row = "";
+    int column = 0;
+    do
+    {
+       string shot = AskForShot();
+        (row, column) = GameLogic.SplitSHotIntoRowAndColumn(shot);
+        isValidShot = GameLogic.ValidateShot(activePlayer, row, column);
+
+        if (isValidShot == false)
+        {
+            Console.WriteLine("Invalid Shot Location. Please try again.");
+        }
+
+    } while (isValidShot == false);
+
+    bool isAHit = GameLogic.IdentifyShotResult(opponent, row, column);
+
+    GameLogic.MarkShotResult(activePlayer, row, column, isAHit);    
+}
+
+static string AskForShot()
+{
+    Console.Write("Please enter your shot selection: ");
+    string output = Console.ReadLine();
+
+    return output;
 }
 
 void DisplayShotGrid(PlayerInfoModel activePlayer)
